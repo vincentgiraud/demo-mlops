@@ -12,7 +12,7 @@ suffix=${guid//[-]/}
 suffix=${suffix:0:18}
 
 RESOURCE_PROVIDER="Microsoft.MachineLearningServices"
-REGIONS=("eastus" "westus" "centralus" "northeurope" "westeurope")
+REGIONS=("eastus" "westus" "centralus" "northeurope")
 RANDOM_REGION=${REGIONS[$RANDOM % ${#REGIONS[@]}]}
 
 # Dev environment
