@@ -16,16 +16,16 @@ REGIONS=("eastus" "westus" "centralus" "northeurope" "westeurope")
 RANDOM_REGION=${REGIONS[$RANDOM % ${#REGIONS[@]}]}
 
 # Dev environment
-DEV_RESOURCE_GROUP="rg-ai300-dev-${suffix}"
-DEV_WORKSPACE_NAME="mlw-ai300-dev-${suffix}"
+DEV_RESOURCE_GROUP="rg-demo-dev-${suffix}"
+DEV_WORKSPACE_NAME="mlw-demo-dev-${suffix}"
 
 # Prod environment
-PROD_RESOURCE_GROUP="rg-ai300-prod-${suffix}"
-PROD_WORKSPACE_NAME="mlw-ai300-prod-${suffix}"
+PROD_RESOURCE_GROUP="rg-demo-prod-${suffix}"
+PROD_WORKSPACE_NAME="mlw-demo-prod-${suffix}"
 
 # Shared registry
-REGISTRY_RESOURCE_GROUP="rg-ai300-reg-${suffix}"
-REGISTRY_NAME="mlr-ai300-shared-${suffix}"
+REGISTRY_RESOURCE_GROUP="rg-demo-reg-${suffix}"
+REGISTRY_NAME="mlr-demo-shrd-${suffix}"
 
 # Compute
 COMPUTE_INSTANCE="ci${suffix}"
