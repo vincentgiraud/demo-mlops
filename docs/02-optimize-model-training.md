@@ -34,7 +34,7 @@ To create the Azure Machine Learning workspace, a compute instance, and a comput
 
     ```azurecli
     rm -r mslearn-mlops -f
-    git clone https://github.com/MicrosoftLearning/mslearn-mlops.git mslearn-mlops
+    git clone https://https://github.com/vincentgiraud/demo-mlops.git mslearn-mlops
     ```
 
     > Use `SHIFT + INSERT` to paste your copied code into the Cloud Shell.
@@ -71,10 +71,10 @@ To create the Azure Machine Learning workspace, a compute instance, and a comput
         <li>Select <b>Go to resource</b> and in its <b>Overview</b> page, select <b>Launch studio</b>. Another tab will open in your browser to open the Azure Machine Learning studio.</li>
         <li>Close any pop-ups that appear in the studio.</li>
         <li>Within the Azure Machine Learning studio, navigate to the <b>Compute</b> page and select <b>+ New</b> under the <b>Compute instances</b> tab.</li>
-        <li>Give the compute instance a unique name and then select <b>Standard_DS11_v2</b> as the virtual machine size.</li>
+        <li>Give the compute instance a unique name and then select <b>STANDARD_E2DS_V5</b> as the virtual machine size.</li>
         <li>Select <b>Review + create</b> and then select <b>Create</b>.</li>
         <li>Next, select the <b>Compute clusters</b> tab and select <b>+ New</b>.</li>
-        <li>Choose the same region as the one where you created your workspace and then select <b>Standard_DS11_v2</b> as the virtual machine size. Select <b>Next</b></li>
+        <li>Choose the same region as the one where you created your workspace and then select <b>STANDARD_E2DS_V5</b> as the virtual machine size. Select <b>Next</b></li>
         <li>Give the cluster a unique name and then select <b>Create</b>.</li>
     </ol>
     </details>
@@ -100,7 +100,7 @@ When you've created the workspace and necessary compute resources, you can open 
 1. Run the following command to clone a Git repository containing notebooks, data, and other files to your workspace:
 
     ```
-    git clone https://github.com/MicrosoftLearning/mslearn-mlops.git mslearn-mlops
+    git clone https://https://github.com/vincentgiraud/demo-mlops.git mslearn-mlops
     ```
 
 1. When the command has completed, in the **Files** pane, click **&#8635;** to refresh the view and verify that a new **Users/*your-user-name*/mslearn-mlops** folder has been created.

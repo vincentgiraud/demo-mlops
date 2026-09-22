@@ -34,7 +34,7 @@ You can manually create necessary resources and assets to work with Azure Machin
 
 	```azurecli
 	rm -r mslearn-mlops -f
-	git clone https://github.com/MicrosoftLearning/mslearn-mlops.git mslearn-mlops
+	git clone https://https://github.com/vincentgiraud/demo-mlops.git mslearn-mlops
 	```
 
 	> Use `SHIFT + INSERT` to paste your copied code into the Cloud Shell.

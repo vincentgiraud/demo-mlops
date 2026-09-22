@@ -36,7 +36,7 @@ First, you create the Azure Machine Learning workspace and compute resources you
 
 	```azurecli
 	rm -r mslearn-mlops -f
-	git clone https://github.com/MicrosoftLearning/mslearn-mlops.git mslearn-mlops
+	git clone https://https://github.com/vincentgiraud/demo-mlops.git mslearn-mlops
 	cd mslearn-mlops/infra
 	./setup.sh
 	```
@@ -53,7 +53,7 @@ With a workspace in place, you can now create your own GitHub repository and con
 
 Next, you create your own GitHub repository from the original lab repo so you can use GitHub Actions.
 
-1. In a browser, go to `https://github.com/MicrosoftLearning/mslearn-mlops`.
+1. In a browser, go to `https://https://github.com/vincentgiraud/demo-mlops`.
 1. In the upper-right corner, select **Use this template** and then choose **Create a new repository**.
 1. In the **Owner** field, select your GitHub account. In the **Repository name** field, enter a name such as `mslearn-mlops`.
 1. Select **Create repository from template**.

@@ -47,7 +47,7 @@ By completing this challenge, you'll learn how to:
 
 ## Instructions
 
-To work through the challenges, you need **your own public repo** which includes the challenge files. Create a new public repo by navigating to [https://github.com/MicrosoftLearning/mslearn-mlops](https://github.com/MicrosoftLearning/mslearn-mlops) and selecting the **Use this template** button to create your own repo.
+To work through the challenges, you need **your own public repo** which includes the challenge files. Create a new public repo by navigating to [https://https://github.com/vincentgiraud/demo-mlops](https://https://github.com/vincentgiraud/demo-mlops) and selecting the **Use this template** button to create your own repo.
 
 In the **experimentation** folder, you'll find a Jupyter notebook that trains a classification model. The data used by the notebook is in the **experimentation/data** folder and contains a CSV file. 
 

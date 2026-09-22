@@ -1,16 +1,9 @@
-#! /usr/bin/sh
+#!/usr/bin/env bash
 
-# Check if a suffix was passed as an argument
-if [[ -n "$1" ]]; then
-  suffix=$1
-else
-  # Generate random suffix from UUID if none was provided
-  guid=$(cat /proc/sys/kernel/random/uuid)
-  suffix=${guid//[-]/}
-  suffix=${suffix:0:18}
-fi
-
-echo "Suffix: $suffix"
+# Create random string
+guid=$(uuidgen | tr '[:upper:]' '[:lower:]')
+suffix=${guid//[-]/}
+suffix=${suffix:0:18}
 
 # Set the necessary variables
 RESOURCE_GROUP="rg-ai300-l${suffix}"
@@ -36,11 +29,11 @@ az configure --defaults workspace=$WORKSPACE_NAME
 
 # Create compute instance
 echo "Creating a compute instance with name: " $COMPUTE_INSTANCE
-az ml compute create --name ${COMPUTE_INSTANCE} --size STANDARD_E2DS_V5 --type ComputeInstance 
+az ml compute create --name ${COMPUTE_INSTANCE} --size STANDARD_E2DS_V5 --type ComputeInstance
 
 # Create compute cluster
 echo "Creating a compute cluster with name: " $COMPUTE_CLUSTER
-az ml compute create --name ${COMPUTE_CLUSTER} --size STANDARD_E2DS_V5 --max-instances 2 --type AmlCompute 
+az ml compute create --name ${COMPUTE_CLUSTER} --size STANDARD_E2DS_V5 --max-instances 2 --type AmlCompute
 
 # Create data assets
 echo "Create training data asset:"
