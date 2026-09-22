@@ -69,8 +69,8 @@ First, you create or reuse an Azure Machine Learning workspace and the data asse
 	> Ignore any messages that say that extensions couldn't be installed.
 
 1. Wait for the script to finish. It creates a resource group, an Azure Machine Learning workspace, compute resources, and the data assets you need for this lab.
-1. In the Azure portal, go to **Resource groups** and open the `rg-ai300-...` resource group that was created.
-1. Select the Azure Machine Learning workspace (for example, `mlw-ai300-...`) and then select **Launch studio** to open Azure Machine Learning studio.
+1. In the Azure portal, go to **Resource groups** and open the `rg-demo-...` resource group that was created.
+1. Select the Azure Machine Learning workspace (for example, `mlw-demo-...`) and then select **Launch studio** to open Azure Machine Learning studio.
 1. In the studio, select **Data** and verify that you have the following data assets:
 	- An **MLTable** or file-based asset named `diabetes-training` for the core training data.
 	- A **File (uri_folder)** data asset named `diabetes-dev-folder` that points to the `experimentation/data` folder in your workspace files.
@@ -309,6 +309,6 @@ When you finish exploring Azure Machine Learning, you should delete the resource
 
 1. Close the Azure Machine Learning studio tab and return to the Azure portal.
 1. In the Azure portal, on the **Home** page, select **Resource groups**.
-1. Select the **rg-ai300-...** resource group that contains your Azure Machine Learning workspace and any associated resources.
+1. Select the **rg-demo-...** resource group that contains your Azure Machine Learning workspace and any associated resources.
 1. At the top of the **Overview** page for your resource group, select **Delete resource group**.
 1. Enter the resource group name to confirm you want to delete it, and select **Delete**.

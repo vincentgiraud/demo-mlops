@@ -45,22 +45,22 @@ jobs:
       - name: Detect Azure ML workspace
         id: detect
         run: |
-          RG_NAME=$(az group list --query "[?starts_with(name,'rg-ai300-l')].name | [0]" -o tsv)
+          RG_NAME=$(az group list --query "[?starts_with(name,'rg-demo-l')].name | [0]" -o tsv)
           if [ -z "$RG_NAME" ]; then
-            echo "No resource group starting with rg-ai300-l found." >&2
+            echo "No resource group starting with rg-demo-l found." >&2
             exit 1
           fi
 
-          WS_NAME=$(az ml workspace list --resource-group "$RG_NAME" --query "[?starts_with(name,'mlw-ai300-l')].name | [0]" -o tsv)
+          WS_NAME=$(az ml workspace list --resource-group "$RG_NAME" --query "[?starts_with(name,'mlw-demo-l')].name | [0]" -o tsv)
           if [ -z "$WS_NAME" ]; then
-            echo "No workspace starting with mlw-ai300-l found in $RG_NAME." >&2
+            echo "No workspace starting with mlw-demo-l found in $RG_NAME." >&2
             exit 1
           fi
 
           SUBSCRIPTION_ID=$(az account show --query id -o tsv)
 
           # unique, deterministic, region-safe name
-          SUFFIX="${WS_NAME#mlw-ai300-l}"
+          SUFFIX="${WS_NAME#mlw-demo-l}"
           ENDPOINT_NAME="diabetes-endpoint-${SUFFIX:0:8}"
 
           echo "resource_group=$RG_NAME" >> "$GITHUB_OUTPUT"

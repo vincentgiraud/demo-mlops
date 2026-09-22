@@ -50,8 +50,8 @@ You can manually create necessary resources and assets to work with Azure Machin
 	> If the `code` command is not available, you are in the new Cloud Shell experience. Switch to Classic Cloud Shell by selecting **Switch to Classic Cloud Shell** in the toolbar and selecting **Confirm**. Then run the commands again.
 
 1. Review the script and identify the resources that are created for your current **development** environment:
-	- A resource group with a randomized suffix, for example `rg-ai300-l...`.
-	- An Azure Machine Learning workspace, for example `mlw-ai300-l...`.
+	- A resource group with a randomized suffix, for example `rg-demo-l...`.
+	- An Azure Machine Learning workspace, for example `mlw-demo-l...`.
 	- A compute instance for interactive work.
 	- A compute cluster for training jobs.
 	- Data assets for the diabetes training data in the `data/diabetes-data` folder.
@@ -74,15 +74,15 @@ Before you add more commands, you need a clear picture of how you want your envi
 For this lab, imagine the following target architecture:
 
 - **Dev workspace** for experimentation:
-	- Resource group: `rg-ai300-dev-<suffix>`
-	- Workspace: `mlw-ai300-dev-<suffix>`
+	- Resource group: `rg-demo-dev-<suffix>`
+	- Workspace: `mlw-demo-dev-<suffix>`
 	- Data asset: `diabetes-dev-folder` that points to the sample data in the `data/diabetes-data` folder.
 - **Prod workspace** for production training and deployment:
-	- Resource group: `rg-ai300-prod-<suffix>`
-	- Workspace: `mlw-ai300-prod-<suffix>`
+	- Resource group: `rg-demo-prod-<suffix>`
+	- Workspace: `mlw-demo-prod-<suffix>`
 	- Data asset: `diabetes-prod-folder` that points to the larger dataset in the `production/data` folder.
 - **Shared registry** for reusable assets:
-	- Registry: `mlr-ai300-shared-<suffix>` in a central resource group.
+	- Registry: `mlr-demo-shrd-<suffix>` in a central resource group.
 	- Both workspaces can push and pull models and environments from this registry.
 
 > [!NOTE]
@@ -110,16 +110,16 @@ Next, you map your target architecture to Azure CLI commands. Instead of running
 	suffix=${suffix:0:18}
 
 	# Dev environment
-	DEV_RESOURCE_GROUP="rg-ai300-dev-${suffix}"
-	DEV_WORKSPACE_NAME="mlw-ai300-dev-${suffix}"
+	DEV_RESOURCE_GROUP="rg-demo-dev-${suffix}"
+	DEV_WORKSPACE_NAME="mlw-demo-dev-${suffix}"
 
 	# Prod environment
-	PROD_RESOURCE_GROUP="rg-ai300-prod-${suffix}"
-	PROD_WORKSPACE_NAME="mlw-ai300-prod-${suffix}"
+	PROD_RESOURCE_GROUP="rg-demo-prod-${suffix}"
+	PROD_WORKSPACE_NAME="mlw-demo-prod-${suffix}"
 
 	# Shared registry (one per subscription/region)
-	REGISTRY_RESOURCE_GROUP="rg-ai300-reg-${suffix}"
-	REGISTRY_NAME="mlr-ai300-shared-${suffix}"
+	REGISTRY_RESOURCE_GROUP="rg-demo-reg-${suffix}"
+	REGISTRY_NAME="mlr-demo-shrd-${suffix}"
 	```
 
 1. In the `infra` folder, open `registry.yml` and review the values that define the shared registry. The Azure CLI reads this YAML file literally, so the Bash script needs to inject the dynamic registry name and primary region into the file before running the create command. In this lab, use placeholders in `registry.yml` like this:
@@ -259,7 +259,7 @@ When you finish exploring Azure Machine Learning, you should delete the resource
 
 1. Close the Azure Machine Learning studio tab and return to the Azure portal.
 1. In the Azure portal, on the **Home** page, select **Resource groups**.
-1. If you created any additional resource groups while experimenting with this lab (for example, `rg-ai300-dev-...`, `rg-ai300-prod-...`, or `rg-ai300-reg-...`), delete those resource groups as well.
-1. Select the **rg-ai300-...** resource group that was created by the original `setup.sh` script.
+1. If you created any additional resource groups while experimenting with this lab (for example, `rg-demo-dev-...`, `rg-demo-prod-...`, or `rg-demo-reg-...`), delete those resource groups as well.
+1. Select the **rg-demo-...** resource group that was created by the original `setup.sh` script.
 1. At the top of the **Overview** page for your resource group, select **Delete resource group**.
 1. Enter the resource group name to confirm you want to delete it, and select **Delete**.

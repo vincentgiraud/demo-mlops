@@ -62,8 +62,8 @@ To create the Azure Machine Learning workspace, a compute instance, and a comput
         <li>Create a new Azure Machine Learning resource with the following settings:
             <ul>
                 <li><b>Subscription</b>: <i>Your Azure subscription</i></li>
-                <li><b>Resource group</b>: rg-ai300-labs</li>
-                <li><b>Workspace name</b>: mlw-ai300-labs</li>
+                <li><b>Resource group</b>: rg-demo-labs</li>
+                <li><b>Workspace name</b>: mlw-demo-labs</li>
                 <li><b>Region</b>: <i>Select the geographical region closest to you</i></li>
                 <li><b>Storage account</b>: <i>Note the default new storage account that will be created for your workspace</i></li>
                 <li><b>Key vault</b>: <i>Note the default new key vault that will be created for your workspace</i></li>
@@ -86,7 +86,7 @@ To create the Azure Machine Learning workspace, a compute instance, and a comput
 
 When you've created the workspace and necessary compute resources, you can open the Azure Machine Learning studio and clone the lab materials into the workspace.
 
-1. In the Azure portal, navigate to the Azure Machine Learning workspace named **mlw-ai300-...**.
+1. In the Azure portal, navigate to the Azure Machine Learning workspace named **mlw-demo-...**.
 1. Select the Azure Machine Learning workspace, and in its **Overview** page, select **Launch studio**. Another tab will open in your browser to open the Azure Machine Learning studio.
 1. Close any pop-ups that appear in the studio.
 1. Within the Azure Machine Learning studio, navigate to the **Compute** page and verify that the compute instance and cluster you created in the previous section exist. The compute instance should be running, the cluster should be idle and have 0 nodes running.
@@ -147,6 +147,6 @@ When you finish exploring Azure Machine Learning, you should delete the resource
 
 1. Close the Azure Machine Learning studio tab and return to the Azure portal.
 1. In the Azure portal, on the **Home** page, select **Resource groups**.
-1. Select the **rg-ai300-...** resource group.
+1. Select the **rg-demo-...** resource group.
 1. At the top of the **Overview** page for your resource group, select **Delete resource group**.
 1. Enter the resource group name to confirm you want to delete it, and select **Delete**.

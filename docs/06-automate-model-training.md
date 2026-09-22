@@ -44,8 +44,8 @@ First, you create the Azure Machine Learning workspace and compute resources you
 	> Ignore any messages that say that extensions couldn't be installed.
 
 1. Wait for the script to finish. It creates a resource group, an Azure Machine Learning workspace, and compute resources.
-1. In the Azure portal, go to **Resource groups** and open the `rg-ai300-...` resource group that was created.
-1. Select the Azure Machine Learning workspace (for example, `mlw-ai300-...`) and then select **Launch studio** to open Azure Machine Learning studio.
+1. In the Azure portal, go to **Resource groups** and open the `rg-demo-...` resource group that was created.
+1. Select the Azure Machine Learning workspace (for example, `mlw-demo-...`) and then select **Launch studio** to open Azure Machine Learning studio.
 
 With a workspace in place, you can now create your own GitHub repository and configure secure access.
 
@@ -83,8 +83,8 @@ To let GitHub Actions authenticate to Azure Machine Learning, you use a service 
 1. Enter `AZURE_CREDENTIALS` as the **Name** of the secret.
 1. Paste the JSON output from the `az ad sp create-for-rbac` command into the **Value** field and select **Add secret**.
 1. Select the **Variables** tab and then select **New repository variable**.
-1. Enter `AZURE_RESOURCE_GROUP` as the **Name** and your resource group name (for example, `rg-ai300-l<suffix>`) as the **Value**. Select **Add variable**.
-1. Select **New repository variable** again. Enter `AZURE_WORKSPACE_NAME` as the **Name** and your Azure Machine Learning workspace name (for example, `mlw-ai300-l<suffix>`) as the **Value**. Select **Add variable**.
+1. Enter `AZURE_RESOURCE_GROUP` as the **Name** and your resource group name (for example, `rg-demo-l<suffix>`) as the **Value**. Select **Add variable**.
+1. Select **New repository variable** again. Enter `AZURE_WORKSPACE_NAME` as the **Name** and your Azure Machine Learning workspace name (for example, `mlw-demo-l<suffix>`) as the **Value**. Select **Add variable**.
 
 Your GitHub repository now has an encrypted secret that GitHub-hosted runners can use to sign in to Azure and submit jobs to your Azure Machine Learning workspace.
 
@@ -198,7 +198,7 @@ When you finish exploring Azure Machine Learning and GitHub Actions, you should 
 
 1. Close the Azure Machine Learning studio tab and return to the Azure portal.
 1. In the Azure portal, on the **Home** page, select **Resource groups**.
-1. Select the **rg-ai300-...** resource group that contains your Azure Machine Learning workspace.
+1. Select the **rg-demo-...** resource group that contains your Azure Machine Learning workspace.
 1. At the top of the **Overview** page for your resource group, select **Delete resource group**.
 1. Enter the resource group name to confirm you want to delete it, and select **Delete**.
 1. In GitHub, you can also delete the repository you created from the `mslearn-mlops` template if you no longer need the workflows or sample code.
