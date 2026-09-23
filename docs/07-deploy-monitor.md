@@ -97,7 +97,7 @@ With your template-based repository in place and your workspace already provisio
 
 Next, you set up GitHub so that you can run training in a dev environment and later deploy from a prod environment.
 
-1. In a browser, go to the repository you created from the `MicrosoftLearning/mslearn-mlops` template.
+1. In a browser, go to the repository you created from the `vincentgiraud/demo-mlops` template.
 1. In your repo, go to the **Actions** tab and enable GitHub Actions if prompted.
 1. In the repo, go to **Settings** > **Environments**.
 1. Create two environments:
