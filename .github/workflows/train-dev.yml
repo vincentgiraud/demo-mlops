@@ -34,15 +34,15 @@ jobs:
       - name: Detect Azure ML workspace
         id: detect
         run: |
-          RG_NAME=$(az group list --query "[?starts_with(name,'rg-demo-l')].name | [0]" -o tsv)
+          RG_NAME=$(az group list --query "[?starts_with(name,'rg-demo-dev-')].name | [0]" -o tsv)
           if [ -z "$RG_NAME" ]; then
-            echo "No resource group starting with rg-demo-l found." >&2
+            echo "No resource group starting with rg-demo-dev- found." >&2
             exit 1
           fi
 
-          WS_NAME=$(az ml workspace list --resource-group "$RG_NAME" --query "[?starts_with(name,'mlw-demo-l')].name | [0]" -o tsv)
+          WS_NAME=$(az ml workspace list --resource-group "$RG_NAME" --query "[?starts_with(name,'mlw-demo-dev-')].name | [0]" -o tsv)
           if [ -z "$WS_NAME" ]; then
-            echo "No workspace starting with mlw-demo-l found in $RG_NAME." >&2
+            echo "No workspace starting with mlw-demo-dev- found in $RG_NAME." >&2
             exit 1
           fi
 
