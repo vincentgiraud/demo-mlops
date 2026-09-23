@@ -51,7 +51,7 @@ jobs:
           echo "resource_group=$RG_NAME" >> "$GITHUB_OUTPUT"
           echo "workspace=$WS_NAME" >> "$GITHUB_OUTPUT"
 
-      - name: Run training job in dev and capture logs
+      - name: Run training job in dev
         id: train
         run: |
           JOB_NAME="diabetes-train-dev-${{ github.run_id }}"
@@ -60,18 +60,38 @@ jobs:
             -f src/job.yml \
             --name "$JOB_NAME" \
             --set inputs.training_data.path=azureml:diabetes-dev-folder@latest \
-            --stream | tee training_output.log
+            --stream
 
-      - name: Extract dev metrics from logs
-        id: parse-metrics
+          echo "job_name=$JOB_NAME" >> "$GITHUB_OUTPUT"
+
+      - name: Download dev training outputs
+        id: download
         run: |
-          if [ ! -f training_output.log ]; then
-            echo "No training_output.log found to parse metrics." >&2
+          JOB_NAME="${{ steps.train.outputs.job_name }}"
+          mkdir -p downloaded-job
+          az ml job download --name "$JOB_NAME" --output-name metrics_output --download-path downloaded-job
+
+          METRICS_FILE=$(find downloaded-job -name metrics.json -print -quit)
+          if [ -z "$METRICS_FILE" ]; then
+            echo "Downloaded files:" >&2
+            find downloaded-job -maxdepth 5 -type f | sort >&2 || true
+            echo "No metrics.json found in downloaded job outputs." >&2
             exit 1
           fi
 
-          ACC=$(grep -o "Accuracy: .*" training_output.log | tail -n 1 | awk '{print $2}') || true
-          AUC=$(grep -o "AUC: .*" training_output.log | tail -n 1 | awk '{print $2}') || true
+          echo "metrics_file=$METRICS_FILE" >> "$GITHUB_OUTPUT"
+
+      - name: Extract dev metrics from output artifact
+        id: parse-metrics
+        run: |
+          METRICS_FILE="${{ steps.download.outputs.metrics_file }}"
+          if [ ! -f "$METRICS_FILE" ]; then
+            echo "No metrics file found to parse." >&2
+            exit 1
+          fi
+
+          ACC=$(python -c "import json; print(json.load(open(r'$METRICS_FILE', encoding='utf-8'))['accuracy'])")
+          AUC=$(python -c "import json; print(json.load(open(r'$METRICS_FILE', encoding='utf-8'))['auc'])")
 
           echo "Dev accuracy: $ACC"
           echo "Dev AUC: $AUC"
@@ -95,7 +115,7 @@ jobs:
               if (acc) body += `\n- Accuracy: ${acc}`;
               if (auc) body += `\n- AUC: ${auc}`;
             } else {
-              body += '\n\nMetrics could not be parsed from logs. Check the Azure Machine Learning job run for details.';
+              body += '\n\nMetrics could not be read from the Azure Machine Learning job output. Check the job run for details.';
             }
 
             await github.rest.issues.createComment({
