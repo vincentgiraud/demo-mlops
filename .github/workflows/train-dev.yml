@@ -6,15 +6,45 @@ on:
      branches:
        - main
      paths:
-       - 'src/train-model-parameters.py'
-       - 'src/job.yml'
+       - 'src/**'
+       - 'tests/**'
+       - 'requirements.txt'
+       - 'pytest.ini'
+       - '.github/workflows/train-dev.yml'
 
 permissions:
   contents: read
   pull-requests: write
 
+env:
+  MIN_ACCURACY: '0.75'
+  MIN_AUC: '0.80'
+
 jobs:
+  python-quality:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      - name: Install test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+
+      - name: Run Python tests
+        run: python -m pytest -q
+
   train-dev:
+    needs: python-quality
     runs-on: ubuntu-latest
     environment: dev
 
@@ -121,17 +151,30 @@ jobs:
           echo "dev_accuracy=$ACC" >> "$GITHUB_OUTPUT"
           echo "dev_auc=$AUC" >> "$GITHUB_OUTPUT"
 
+      - name: Enforce model quality gate
+        id: model-gate
+        continue-on-error: true
+        run: |
+          python src/validate_metrics.py \
+            --metrics-file "${{ steps.download.outputs.metrics_file }}" \
+            --min-accuracy "$MIN_ACCURACY" \
+            --min-auc "$MIN_AUC"
+
       - name: Comment dev metrics on pull request
-        if: github.event_name == 'pull_request'
+        if: always() && github.event_name == 'pull_request'
         uses: actions/github-script@v7
         with:
           script: |
             const acc = '${{ steps.parse-metrics.outputs.dev_accuracy }}';
             const auc = '${{ steps.parse-metrics.outputs.dev_auc }}';
+            const gateOutcome = '${{ steps.model-gate.outcome }}';
+            const gatePassed = gateOutcome === 'success';
 
             const prNumber = context.payload.pull_request.number;
 
-            let body = '✅ Dev training workflow completed.';
+            let body = gatePassed
+              ? '✅ Dev training and model quality gate completed.'
+              : '❌ Dev training completed, but the model quality gate did not pass.';
             if (acc || auc) {
               body += '\n\n**Dev evaluation metrics**';
               if (acc) body += `\n- Accuracy: ${acc}`;
@@ -140,9 +183,19 @@ jobs:
               body += '\n\nMetrics could not be read from the Azure Machine Learning job output. Check the job run for details.';
             }
 
+            body += '\n\n**Acceptance criteria**';
+            body += '\n- Accuracy ≥ ${{ env.MIN_ACCURACY }}';
+            body += '\n- AUC ≥ ${{ env.MIN_AUC }}';
+
             await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: prNumber,
               body,
             });
+
+      - name: Fail when model quality gate does not pass
+        if: steps.model-gate.outcome == 'failure'
+        run: |
+          echo "Model quality gate failed." >&2
+          exit 1

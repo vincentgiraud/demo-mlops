@@ -6,17 +6,22 @@
       "type": "debugpy",
       "request": "launch",
       "program": "${workspaceFolder}/src/train-model-parameters.py",
+      "preLaunchTask": "Prepare local model output",
       "console": "integratedTerminal",
-      "cwd": "${workspaceFolder}",
+      "cwd": "${workspaceFolder}/private/demo-output",
       "justMyCode": true,
       "args": [
         "--training_data",
-        "${workspaceFolder}/data/diabetes-data/diabetes.csv",
+        "${workspaceFolder}/experimentation/data/diabetes-dev.csv",
         "--reg_rate",
         "0.01",
         "--metrics_output",
-        "${workspaceFolder}/outputs/local-debug"
-      ]
+        "${workspaceFolder}/private/demo-output/metrics"
+      ],
+      "env": {
+        "MLFLOW_TRACKING_URI": "file://${workspaceFolder}/private/demo-output/mlruns",
+        "MPLBACKEND": "Agg"
+      }
     }
   ]
 }
