@@ -1,4 +1,6 @@
-name: Train model in prod (PR comment)
+# Archived: the production workspace intentionally has no aml-cluster compute.
+# The supported flow trains and validates in dev, then deploys the approved model to prod.
+name: Archived - Train model in prod (unsupported)
 
 on:
   issue_comment:
