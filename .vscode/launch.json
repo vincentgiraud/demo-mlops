@@ -1,0 +1,22 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug local model training",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/src/train-model-parameters.py",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "justMyCode": true,
+      "args": [
+        "--training_data",
+        "${workspaceFolder}/data/diabetes-data/diabetes.csv",
+        "--reg_rate",
+        "0.01",
+        "--metrics_output",
+        "${workspaceFolder}/outputs/local-debug"
+      ]
+    }
+  ]
+}
