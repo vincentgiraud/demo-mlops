@@ -61,7 +61,7 @@ jobs:
 
           # unique, deterministic, region-safe name
           SUFFIX="${WS_NAME#mlw-demo-prod-}"
-          ENDPOINT_NAME="diabetes-endpoint-${SUFFIX:0:8}"
+          ENDPOINT_NAME="diabetes-live-${SUFFIX:0:12}"
 
           echo "resource_group=$RG_NAME" >> "$GITHUB_OUTPUT"
           echo "workspace=$WS_NAME" >> "$GITHUB_OUTPUT"
