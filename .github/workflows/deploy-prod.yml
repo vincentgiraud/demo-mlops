@@ -13,7 +13,7 @@ jobs:
   deploy-prod:
     if: >-
       github.event.issue.pull_request != null &&
-      contains(github.event.comment.body, '/deploy-prod')
+      github.event.comment.body == '/deploy-prod'
     runs-on: ubuntu-latest
     environment: prod
 

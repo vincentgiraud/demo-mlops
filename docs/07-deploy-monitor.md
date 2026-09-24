@@ -173,25 +173,17 @@ Now you use a GitHub Actions workflow in your template-based repository that tra
 
 The dev workflow stays manual by default and only starts running automatically for pull requests after you add the trigger. That keeps unnecessary runs out of the live repo while still letting you enable PR validation when you're ready.
 
-## Retrain the model on prod data from a pull request comment
+## Keep training in dev and reserve prod for serving
 
-After you're satisfied that the dev training results look reasonable, you can request a prod training run that uses the prod data asset and the `prod` environment in GitHub Actions.
+After the dev workflow and model quality gate pass, the supported flow moves directly to a controlled production deployment. The production workspace intentionally has no `AmlCompute` cluster, while `src/job.yml` explicitly targets `azureml:aml-cluster`. A `/train-prod` command would therefore submit a job to compute that does not exist.
 
-1. In your GitHub repository, open **Settings** > **Environments** and verify that you have a `prod` environment with an `AZURE_CREDENTIALS` secret configured (just as you did earlier for `dev`).
-1. On the same pull request where you validated the dev run, add a new comment that contains the command `/train-prod` on its own line.
-1. In the **Actions** tab, observe that the **Train model in prod (PR comment)** workflow (defined in `.github/workflows/train-prod.yml`) starts in response to your comment.
-1. Wait for the workflow to complete. The workflow:
-	- Signs in to Azure by using the `AZURE_CREDENTIALS` secret in the `prod` environment.
-	- Detects the same Azure Machine Learning workspace you used for dev.
-	- Submits the `src/job.yml` command job again, this time overriding the `training_data` input to use the `diabetes-prod-folder` data asset.
-	- Streams the logs, parses **Accuracy** and **AUC** from the output, and posts them back to the pull request as a separate comment.
-1. Review the new comment on the pull request that includes the **prod** evaluation metrics. Compare these values to the dev metrics to understand how your model behaves on production-like data.
+The former prod-training workflow is retained under `archive/train-prod.yml` for historical reference, but it is no longer an active GitHub Actions workflow. Keeping it outside `.github/workflows` also prevents `/deploy-prod` comments from creating an unrelated skipped workflow run.
 
-By using a comment command to trigger prod training, you keep control over when prod workloads run while still capturing the results as part of the pull request discussion.
+The `diabetes-prod-folder` data asset remains available for a future offline evaluation design. A production-grade promotion pipeline would register the exact model produced and accepted in dev, then deploy that immutable model version to prod rather than retraining it there.
 
 ## Deploy the model to a real-time endpoint from a pull request comment
 
-With dev and prod training complete and reviewed, you're ready to deploy the model to a managed online endpoint by using a Python script and another comment-triggered workflow.
+With dev training and its quality gate complete, you're ready to deploy the model to a managed online endpoint by using a Python script and a comment-triggered workflow.
 
 1. In your local clone, open `src/deploy_to_online_endpoint.py` and review how it:
 	- Connects to your Azure Machine Learning workspace by using `DefaultAzureCredential` and `MLClient`.
@@ -230,9 +222,9 @@ With dev and prod training complete and reviewed, you're ready to deploy the mod
 	}
 	```
 
-	You can also reuse the sample payload in `sample-request.json` from the repo root for CLI-based invocation.
+	You can also reuse the versioned payload in `tests/fixtures/diabetes-positive.json` for CLI-based invocation.
 
-Your production endpoint now serves a model that was trained and reviewed through a PR-based workflow, with dev and prod metrics visible in the pull request and a scripted deployment you can repeat and extend.
+Your production endpoint now serves the checked-in MLflow model, with dev quality evidence and deployment verification visible in the pull request. The next production-hardening step is to register and deploy the exact model artifact accepted by the dev workflow.
 
 ## Enable data collection and configure model monitoring
 
@@ -253,9 +245,9 @@ To monitor for drift and quality issues, Azure Machine Learning needs access to 
 
 Once the first monitoring run completes, you can review metrics like drift scores and see whether the production data distribution is diverging from the training data.
 
-## Simulate drift and retrain through the PR workflow
+## Simulate drift and revalidate through the PR workflow
 
-In a real system, drift or performance degradation would trigger retraining. In this lab, you simulate this by changing a training parameter and then repeating the same PR-based dev → prod → deploy flow you used earlier.
+In a real system, drift or performance degradation would trigger retraining. In this lab, you simulate this by changing a training parameter and then repeating the same PR-based dev validation → prod deployment flow you used earlier.
 
 1. Wait until your monitor has run at least once and review the drift metrics in Azure Machine Learning studio.
 1. In your local clone of the repo, create a new feature branch to represent your retraining work. For example:
@@ -275,11 +267,10 @@ In a real system, drift or performance degradation would trigger retraining. In 
 
 1. In GitHub, create a new pull request from your `feature/drift-retrain` branch into `main`.
 1. Observe that the **Train model in dev** workflow runs automatically for the new pull request because you added the `pull_request` trigger earlier. When it completes, review the comment that shows the updated **dev** Accuracy and AUC.
-1. If the dev metrics look acceptable, add a comment `/train-prod` on the pull request to trigger the **Train model in prod (PR comment)** workflow. When it completes, review the comment that shows the updated **prod** Accuracy and AUC.
-1. If the prod metrics also meet your expectations, add a comment `/deploy-prod` on the pull request to trigger the **Deploy model to online endpoint (PR comment)** workflow. Wait for it to complete.
+1. If the dev metrics meet the configured acceptance criteria, add a comment `/deploy-prod` on the pull request to trigger the **Deploy model to online endpoint (PR comment)** workflow. Wait for it and its smoke test to complete.
 1. Finally, in Azure Machine Learning studio, go to **Endpoints** > **Real-time endpoints**, select the endpoint name reported by the deployment workflow, and use the **Test** tab with the same JSON payload to confirm that the endpoint still returns predictions after your retraining and deployment.
 
-By repeating the same PR-based dev → prod → deploy workflow in response to simulated drift, you see how monitoring, retraining, and controlled promotion can work together in an end-to-end MLOps process.
+By repeating the same PR-based dev validation → prod deployment workflow in response to simulated drift, you see how monitoring, retraining, and controlled deployment can work together in an end-to-end MLOps process.
 
 ## (Optional) Roll back to a previous model version
 
