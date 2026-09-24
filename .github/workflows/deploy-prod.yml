@@ -78,6 +78,38 @@ jobs:
             --endpoint-name "${{ steps.detect.outputs.endpoint_name }}" \
             --deployment-name "blue"
 
+      - name: Smoke test deployed model
+        id: smoke-test
+        run: |
+          RESPONSE=$(az ml online-endpoint invoke \
+            --name "${{ steps.detect.outputs.endpoint_name }}" \
+            --deployment-name "blue" \
+            --resource-group "${{ steps.detect.outputs.resource_group }}" \
+            --workspace-name "${{ steps.detect.outputs.workspace }}" \
+            --request-file tests/fixtures/diabetes-positive.json)
+
+          echo "Endpoint response: $RESPONSE"
+          python - "$RESPONSE" <<'PY'
+          import json
+          import sys
+
+          raw_response = sys.argv[1]
+          response = json.loads(raw_response)
+          if isinstance(response, str):
+              response = json.loads(response)
+
+          if not isinstance(response, list) or len(response) != 1:
+              raise SystemExit(f"Unexpected response shape: {response!r}")
+
+          prediction = response[0]
+          if prediction not in (1, True):
+              raise SystemExit(f"Unexpected prediction: {prediction!r}")
+
+          print("Smoke test passed with one positive prediction.")
+          PY
+
+          echo "prediction=1" >> "$GITHUB_OUTPUT"
+
       - name: Comment deployment result on pull request
         uses: actions/github-script@v7
         with:
@@ -90,6 +122,7 @@ jobs:
               '',
               'Endpoint name: `${{ steps.detect.outputs.endpoint_name }}`',
               'Deployment name: `blue`',
+              'Smoke test: passed (prediction `${{ steps.smoke-test.outputs.prediction }}`).',
               'Data collection for model inputs and outputs is enabled on this deployment.',
               '',
               'Check the workflow run logs for the endpoint scoring URI and verify the endpoint in Azure Machine Learning studio.',
