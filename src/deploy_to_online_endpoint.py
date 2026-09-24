@@ -47,14 +47,24 @@ def get_ml_client(subscription_id: str, resource_group: str, workspace: str) -> 
 
 def ensure_endpoint(ml_client: MLClient, endpoint_name: str) -> ManagedOnlineEndpoint:
     try:
-        return ml_client.online_endpoints.get(name=endpoint_name)
+        endpoint = ml_client.online_endpoints.get(name=endpoint_name)
     except ResourceNotFoundError:
-        endpoint = ManagedOnlineEndpoint(
-            name=endpoint_name,
-            description="Online endpoint for MLflow diabetes model",
-            auth_mode="key",
-        )
-        return ml_client.online_endpoints.begin_create_or_update(endpoint).result()
+        endpoint = None
+
+    if endpoint and endpoint.provisioning_state == "Failed":
+        print(f"Removing failed endpoint '{endpoint_name}' before recreating it...")
+        ml_client.online_endpoints.begin_delete(name=endpoint_name).result()
+        endpoint = None
+
+    if endpoint:
+        return endpoint
+
+    endpoint = ManagedOnlineEndpoint(
+        name=endpoint_name,
+        description="Online endpoint for MLflow diabetes model",
+        auth_mode="key",
+    )
+    return ml_client.online_endpoints.begin_create_or_update(endpoint).result()
 
 
 def create_or_update_deployment(
@@ -72,7 +82,7 @@ def create_or_update_deployment(
         name=deployment_name,
         endpoint_name=endpoint_name,
         model=model,
-        instance_type="Standard_D2as_v4",
+        instance_type="Standard_D2a_v4",
         instance_count=1,
         data_collector=get_data_collector(),
     )
