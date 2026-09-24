@@ -117,7 +117,7 @@ def parse_args():
                         type=str)
     # Use the same baseline regularization value for local and remote runs.
     parser.add_argument("--reg_rate", dest='reg_rate',
-                        type=float, default=0.01)
+                        type=float, default=0.1)
     # metrics_output is optional locally and supplied when a workflow needs metrics.json.
     parser.add_argument("--metrics_output", dest='metrics_output',
                         type=str, default=None)
